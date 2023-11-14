@@ -1,0 +1,22 @@
+import styled from 'styled-components';
+
+export const BtnLoadMore = styled.button`
+  margin: auto;
+  display: flex;
+  border: white;
+  background-color: cadetblue;
+  border-radius: 5px;
+  width: 150px;
+  padding: 8px;
+  text-align: center;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  cursor: pointer;
+
+  &:hover {
+    color: cornsilk;
+    background-color: rgb(17, 113, 145);
+  }
+`;
