@@ -9,15 +9,15 @@ import {
 } from './Searchbar.styled';
 
 export const Searchbar = ({ onSubmit }) => {
-  const [searchItem, setSearchItem] = useState('');
+  const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = event => {
-    setSearchItem(event.target.value);
+    setInputValue(event.target.value);
   };
 
   const handleSubmit = event => {
     event.preventDefault();
-    onSubmit(searchItem);
+    onSubmit(inputValue);
   };
 
   return (
@@ -30,7 +30,7 @@ export const Searchbar = ({ onSubmit }) => {
           type="text"
           autoComplete="off"
           placeholder="Search images and photos"
-          value={searchItem}
+          value={inputValue}
           onChange={handleInputChange}
         />
       </SearchbarForm>

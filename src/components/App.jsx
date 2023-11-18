@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { GlobalStyle } from './GlobalStyle';
 import { Container } from './GlobalStyle';
 
@@ -8,20 +8,19 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Loader } from './Loader/Loader';
 import { ButtonLoadMore } from './Button/Button';
 
-export class App extends Component {
-  state = {
-    images: [],
-    query: '',
-    page: 1,
-    loading: false,
-    error: null,
-    totalImages: 0,
-  };
+export const App = () => {
+  const [image, setImage] = useState([]);
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [totalImage, setTotalImage] = useState(0);
 
-  async componentDidUpdate(prevProps, prevState) {
-    const { page, query } = this.state;
-    if (page !== prevState.page || query !== prevState.query) {
-      this.setState({ loading: true });
+  useEffect(() => {
+    if (!query) return;
+
+    const getImages = async () => {
+      setLoading(true);
       try {
         const response = await searchImage(query, page);
         const newImages = response.hits.map(
@@ -35,53 +34,44 @@ export class App extends Component {
         if (newImages.length === 0) {
           return;
         }
-        this.setState(prevState => ({
-          images: [...newImages, ...prevState.images],
-          totalImages: response.totalHits,
-        }));
+        setImage(prevImages => [...newImages, ...prevImages]);
+        setTotalImage(response.totalHits);
       } catch (error) {
-        this.setState({ error: 'Щось пішло не так', loading: false });
+        setError({ error: 'Щось пішло не так', loading: false });
       } finally {
-        this.setState({ loading: false });
+        setLoading(false);
       }
-    }
-  }
+    };
 
-  handleSearch = async query => {
-    if (this.state.query === query) {
-      return;
-    }
-    this.setState({
-      query,
-      page: 1,
-      images: [],
-      totalImages: 0,
-    });
+    getImages();
+  }, [page, query]);
+
+  const handleSearch = query => {
+    setQuery(query);
+    setPage(1);
+    setImage([]);
+    setTotalImage(0);
   };
 
-  handleLoadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const handleLoadMore = () => {
+    setPage(prevPage => prevPage + 1);
   };
 
-  handleImageClick = image => {
-    this.setState({ selectedImage: image });
+  const handleImageClick = image => {
+    query(image);
   };
 
-  render() {
-    const { images, error, loading, totalImages } = this.state;
-    const showButton = !loading && images.length !== totalImages;
-    return (
-      <Container>
-        <Searchbar onSubmit={this.handleSearch} />
-        {error && <p>{error}</p>}
-        <ImageGallery images={images} onClick={this.handleImageClick} />
+  const showButton = !loading && image.length !== totalImage;
 
-        {showButton && <ButtonLoadMore buttonLoadMore={this.handleLoadMore} />}
-        {loading && <Loader />}
-        <GlobalStyle />
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      <Searchbar onSubmit={handleSearch} />
+      {error && <p>{error}</p>}
+      <ImageGallery images={image} onClick={handleImageClick} />
+
+      {showButton && <ButtonLoadMore buttonLoadMore={handleLoadMore} />}
+      {loading && <Loader />}
+      <GlobalStyle />
+    </Container>
+  );
+};
