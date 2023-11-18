@@ -1,37 +1,30 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { Modal } from 'components/Modal/Modal';
 import { InageItem } from './ImageGalleryItem.styled';
 
-export class ImageGalleryItem extends Component {
-  state = {
-    modalOpen: false,
+export const ImageGalleryItem = ({ image }) => {
+  const [modalOpen, setmodalOpen] = useState(false);
+
+  const openModal = () => {
+    setmodalOpen(true);
   };
 
-  openModal = () => {
-    this.setState({ modalOpen: true });
+  const closeModal = () => {
+    setmodalOpen(false);
   };
 
-  closeModal = () => {
-    this.setState({ modalOpen: false });
-  };
-
-  render() {
-    const { image } = this.props;
-    const { modalOpen } = this.state;
-
-    return (
-      <>
-        <li onClick={this.openModal}>
-          <InageItem src={image.webformatURL} alt={image.tags}/>
-        </li>
-        {modalOpen && (
-          <Modal
-            image={image.largeImageURL}
-            isOpen={modalOpen}
-            onClose={this.closeModal}
-          />
-        )}
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <li onClick={openModal}>
+        <InageItem src={image.webformatURL} alt={image.tags} />
+      </li>
+      {modalOpen && (
+        <Modal
+          image={image.largeImageURL}
+          isOpen={modalOpen}
+          onClose={closeModal}
+        />
+      )}
+    </>
+  );
+};

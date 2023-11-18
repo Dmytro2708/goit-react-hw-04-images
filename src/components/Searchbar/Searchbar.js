@@ -1,38 +1,39 @@
-import { Component } from 'react';
-import { FaSearch  } from 'react-icons/fa';
+import { useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
 
-import { SearchbarHeader, SearchbarForm, SearchbarBtn, SearchbarInput } from './Searchbar.styled';
+import {
+  SearchbarHeader,
+  SearchbarForm,
+  SearchbarBtn,
+  SearchbarInput,
+} from './Searchbar.styled';
 
-export class Searchbar extends Component {
-  state = {
-    onSubmit: '',
+export const Searchbar = ({ onSubmit }) => {
+  const [searchItem, setSearchItem] = useState('');
+
+  const handleInputChange = event => {
+    setSearchItem(event.target.value);
   };
 
-  handleInputChange = event => {
-    this.setState({ onSubmit: event.target.value });
-  };
-
-  handleSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
-    this.props.onSubmit(this.state.onSubmit);
+    onSubmit(searchItem);
   };
 
-  render() {
-    return (
-      <SearchbarHeader>
-        <SearchbarForm onSubmit={this.handleSubmit}>
-          <SearchbarBtn type="submit">
-            <FaSearch  width="14" height="14"/>
-            </SearchbarBtn>
-          <SearchbarInput
-            type="text"
-            autoComplete="off"
-            placeholder="Search images and photos"
-            value={this.state.onSubmit}
-            onChange={this.handleInputChange}
-          />
-        </SearchbarForm>
-      </SearchbarHeader>
-    );
-  }
-}
+  return (
+    <SearchbarHeader>
+      <SearchbarForm onSubmit={handleSubmit}>
+        <SearchbarBtn type="submit">
+          <FaSearch width="14" height="14" />
+        </SearchbarBtn>
+        <SearchbarInput
+          type="text"
+          autoComplete="off"
+          placeholder="Search images and photos"
+          value={searchItem}
+          onChange={handleInputChange}
+        />
+      </SearchbarForm>
+    </SearchbarHeader>
+  );
+};
