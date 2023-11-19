@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { GlobalStyle } from './GlobalStyle';
 import { Container } from './GlobalStyle';
+import { ToastContainer, toast, Flip } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { searchImage } from './Api';
 import { Searchbar } from './Searchbar/Searchbar';
@@ -13,7 +15,6 @@ export const App = () => {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [totalImage, setTotalImage] = useState(0);
 
   useEffect(() => {
@@ -31,13 +32,19 @@ export const App = () => {
             largeImageURL,
           })
         );
+       
         if (newImages.length === 0) {
+          toast('There are no results for your request', {
+            position: toast.POSITION.TOP_CENTER,
+          });
           return;
         }
         setImage(prevImages => [...newImages, ...prevImages]);
         setTotalImage(response.totalHits);
       } catch (error) {
-        setError({ error: 'Щось пішло не так', loading: false });
+        toast('Ooops! Something went wrong. Try reloading page!', {
+          position: toast.POSITION.TOP_CENTER,
+        });
       } finally {
         setLoading(false);
       }
@@ -65,8 +72,8 @@ export const App = () => {
 
   return (
     <Container>
+      <ToastContainer transition={Flip} />
       <Searchbar onSubmit={handleSearch} />
-      {error && <p>{error}</p>}
       <ImageGallery images={image} onClick={handleImageClick} />
 
       {showButton && <ButtonLoadMore buttonLoadMore={handleLoadMore} />}

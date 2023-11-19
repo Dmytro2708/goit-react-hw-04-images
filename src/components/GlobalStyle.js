@@ -19,7 +19,7 @@ body {
 `;
 
 export const Container = styled.div`
-  width: 800px;
+  width: 1200px;
   margin: auto;
   
   h1,

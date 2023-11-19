@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 export const InageItem = styled.img`
-  width: 180px;
+  width: 285px;
+  height: 200px;
   padding: 5px;
   border-radius: 20px;
-  height: 130px;
   cursor: pointer;
   box-sizing: border-box;
 
